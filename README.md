@@ -1,4 +1,4 @@
-# <div style="text-align: left; float: left">Terraform Testing</div><div style="text-align: right">01/30/2022</div>
+# Terraform Testing
 
 ## main.tf
 
@@ -33,10 +33,30 @@ Here is a very small section for defining three data bits.
 
 Currently empty. Building off of this to do things like use the `domain` variable to lookup the zone id, to make this even more dynamic.
 
+## How to do this thing?!
+
+---
+
+After pulling this repo, getting your Zone id ready, you can run the follwing"
+`terraform init`
+`terraform plan` - Ensure everything looks good.
+`terraform apply` - If you wish for terraform to prompt you for the zone identifier.
+-- OR --
+`terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid`
+
+This process took about 7 minutes to run.
+
+You can also update the num_instances value and see the ec2 host count increase or decrease. 
+e.g. `terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid -var num_instances=8` will only add 6 more hosts. Once that completes, `terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid -var num_instances=5` will remove 3. 
+In the console, you can check the work by opening the EC2 page, the VPC page, and the Route53 page. You'll see the hosts get added/removed. 
+
+**Note**: these hosts are all named db0<x> where `x` is just an increment. If you add more than 10, the leading zero will not be removed. I am still working on that one.
+
 ## Manual Steps
 
 ---
 
+Running these steps manually, creating only a single EC2 instance, took about 30 minutes. 
 - Want to create EC2 instance, need VPC
 - Want to create VPC, need EIP
 - Created EIP 3.xxx.xxx.xxx
