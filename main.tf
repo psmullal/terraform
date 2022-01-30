@@ -56,7 +56,7 @@ resource "aws_network_interface" "ten_one" {
 }
 
 # Create the instance, assigning the network interface
-resource "aws_instance" "db" {
+resource "aws_instance" "www" {
   count         = var.num_instances
   ami           = "ami-0a8b4cd432b1c3063"
   instance_type = "t2.micro"
@@ -65,18 +65,18 @@ resource "aws_instance" "db" {
     device_index         = 0
   }
   tags = {
-    Name = "db${format("%02d", count.index)}.${var.domain}"
+    Name = "www${format("%02d", count.index + 1)}.${var.domain}"
   }
 }
 
 # Create the Route53 Record for the instance(s)
-resource "aws_route53_record" "db" {
+resource "aws_route53_record" "www" {
   // same number of records as instances
   count   = var.num_instances
   zone_id = var.aws_route53_zone
-  name    = "db${format("%02d", count.index)}"
+  name    = "www${format("%02d", count.index + 1)}"
   type    = "A"
   ttl     = "300"
   // matches up record N to instance N
-  records = ["${element(aws_instance.db.*.private_ip, count.index)}"]
+  records = ["${element(aws_instance.www.*.private_ip, count.index)}"]
 }
