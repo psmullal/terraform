@@ -38,7 +38,6 @@ resource "aws_subnet" "ten_one" {
   }
 }
 
-
 # Create the Instance Network Interfaces
 resource "aws_network_interface" "ten_zero" {
   count     = var.num_instances
@@ -66,7 +65,7 @@ resource "aws_instance" "db" {
     device_index         = 0
   }
   tags = {
-    Name = "db0${count.index}.${var.domain}"
+    Name = "db${format("%02d", count.index)}.${var.domain}"
   }
 }
 
@@ -75,7 +74,7 @@ resource "aws_route53_record" "db" {
   // same number of records as instances
   count   = var.num_instances
   zone_id = var.aws_route53_zone
-  name    = "db0${count.index}"
+  name    = "db${format("%02d", count.index)}"
   type    = "A"
   ttl     = "300"
   // matches up record N to instance N
