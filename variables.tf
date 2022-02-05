@@ -12,5 +12,5 @@ variable "domain" {
 
 # How many instances to create. Defaults to 2
 variable "num_instances" {
-  default = 2
+  default = 1
 }

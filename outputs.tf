@@ -28,3 +28,7 @@ output "private_ip_ten_one" {
 output "private_ip_ten_zero" {
   value = aws_network_interface.ten_zero[*].private_ip
 }
+
+output "rds_endpoint" {
+  value = aws_db_instance.basicdb.endpoint
+}
