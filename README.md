@@ -29,34 +29,45 @@ Here is a very small section for defining three data bits.
 
 ## outputs.tf
 
+These are named in a clear manner, but I will describe them anyway...
+
+- `private_ip` - This is the instance's private IP Address
+- `hostname` - This is the hostname of the instance.
+- `subnet_id_ten_one` - This is the subnet definition for the subnet named 'ten_one'
+- `subnet_id_ten_zero` - This is the subnet definition for the subnet named 'ten_zero'
+- `private_ip_ten_one` - This is the Private IP on the ten_one network
+- `private_ip_ten_zero` - This is the Private IP on the ten_zero network
+- `rds_endpoint` - This is the way you access the Database
+
 ---
 
 Currently empty. Building off of this to do things like use the `domain` variable to lookup the zone id, to make this even more dynamic.
 
-## How to do this thing?!
+## How to do this thing?
 
 ---
 
 After pulling this repo, getting your Zone id ready, you can run the follwing"
 `terraform init`
-`terraform plan` - Ensure everything looks good.
+`terraform plan -var aws_route53_zone=<your zone ID> -var domain=<your domain>` - Ensure everything looks good.
 `terraform apply` - If you wish for terraform to prompt you for the zone identifier.
 -- OR --
-`terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid`
+`terraform apply -var aws_route53_zone=<your zone ID> -var domain=<your domain>`
 
-This process took about 7 minutes to run.
+~~This process took about 7 minutes to run.~~ <- This was before any RDS instances or secondary host types `adm` were added.
 
-You can also update the num_instances value and see the ec2 host count increase or decrease. 
-e.g. `terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid -var num_instances=8` will only add 6 more hosts. Once that completes, `terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid -var num_instances=5` will remove 3. 
-In the console, you can check the work by opening the EC2 page, the VPC page, and the Route53 page. You'll see the hosts get added/removed. 
+You can also update the num_instances value and see the ec2 host count increase or decrease.
+e.g. `terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid -var num_instances=8` will only add 6 more hosts. Once that completes, `terraform apply -var domain=yourdomain.com -var aws_route_53_record=yourzoneid -var num_instances=5` will remove 3.
+In the console, you can check the work by opening the EC2 page, the VPC page, and the Route53 page. You'll see the hosts get added/removed.
 
-**Note**: these hosts are all named db0<x> where `x` is just an increment. If you add more than 10, the leading zero will not be removed. I am still working on that one.
+~~**Note**: these hosts are all named db0\<x> where `x` is just an increment. If you add more than 10, the leading zero will not be removed. I am still working on that one.~~
 
 ## Manual Steps
 
 ---
 
-Running these steps manually, creating only a single EC2 instance, took about 30 minutes. 
+Running these steps manually, creating only a single EC2 instance, took about 30 minutes.
+
 - Want to create EC2 instance, need VPC
 - Want to create VPC, need EIP
 - Created EIP 3.xxx.xxx.xxx
